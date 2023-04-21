@@ -3,7 +3,7 @@ const uuid = require("node-uuid");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  _id: { type: String, default: uuid.v4, required: true },
+  _id: { type: mongoose.Schema.Types.ObjectId },
   fullname: { type: String, required: true},
   username: { type: String, required: true},
   email: { type: String, required: true},
