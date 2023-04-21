@@ -1,16 +1,17 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const EntitySchema = new Schema({
+const TableSchema = new Schema({
   _id: { type: mongoose.Schema.Types.ObjectId },
   name: { type: String },
   attribute: { type: Array },
-  cardinalty: { type: String },
+  methode: { type: Array },
   relationShip: { type: String },
+  multiplicity: { type: String },
   metamodel_id:{type:String},
   createdAt: { type: Date, default: Date.now },
   modifiedAt: { type: Date, default: Date.now },
 });
 
-const Entity = mongoose.model("Entity", EntitySchema);
-module.exports = Entity;
+const Table = mongoose.model("Table", TableSchema);
+module.exports = Table;

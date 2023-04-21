@@ -8,7 +8,6 @@ const MetaModelSchema = new Schema({
   approachUsed: { type: String },
   heuristic: { type: String },
   user_id: { type: String },
-  description: { type: String },
   createdAt: { type: Date, default: Date.now },
   modifiedAt: { type: Date, default: Date.now },
 });

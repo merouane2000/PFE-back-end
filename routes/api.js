@@ -5,9 +5,15 @@ const MetaModel = require("../models/MetaModel");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Entity = require("../models/Entity");
+const Table = require("../models/Table");
 
 const createUser = async (formInfo) => {
-  const user = new User(formInfo);
+  const user = new User();
+  user._id = new mongoose.Types.ObjectId();
+  user.fullname = formInfo.fullname
+  user.username =formInfo.username
+  user.email =formInfo.email
+  user.password = formInfo.password
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   user.save();
@@ -55,11 +61,26 @@ router.post("/user/login", async (req, res, next) => {
   }
 });
 
+router.post("/metamodel-update", async (req, res, next) => {
+
+  const data = req.body
+  console.log(data)
+
+  MetaModel.findOneAndUpdate(
+    { _id: data.metaModel_id },
+    { $set: { description: data.descriptionModel, example: data.exampleModel} },
+    { new: true }
+  )
+    res.send({isUpdated:true})
+
+  
+  
+});
 router.post("/metamodel-create", async (req, res, next) => {
   const data = req.body.data;
   let metaModel = new MetaModel();
   metaModel._id = new mongoose.Types.ObjectId();
-  metaModel._type = data.diagramType;
+  metaModel.type = data.diagramType;
   metaModel.name = data.modelName;
   metaModel.approachUsed = data.UsedApproach;
   metaModel.heuristic = data.targetQuality;
@@ -75,8 +96,22 @@ router.post("/entity-create", async (req, res, next) => {
   entity.name = data.name;
   entity.cardinalty = data.cardinality;
   entity.attribute = data.attributeData;
+  entity.metamodel_id = data.metaModel_ID;
   entity.save();
   res.send({ isCreate: true, entity_ID: entity._id });
 });
 
+router.post("/table-create", async (req, res, next) => {
+  const data = req.body;
+  console.log(data);
+  let table =new Table();
+  table._id = new mongoose.Types.ObjectId();
+  table.name = data.name;
+  table.attribute = data.attributes;
+  table.methode = data.methodes;
+  table.metamodel_id = data.metaModel_ID;
+  table.multiplicity = data.cardinality;
+  table.save();
+  res.send({ isCreate: true, tbale_id:  table._id });
+});
 module.exports = router;
