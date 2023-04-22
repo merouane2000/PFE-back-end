@@ -10,10 +10,10 @@ const Table = require("../models/Table");
 const createUser = async (formInfo) => {
   const user = new User();
   user._id = new mongoose.Types.ObjectId();
-  user.fullname = formInfo.fullname
-  user.username =formInfo.username
-  user.email =formInfo.email
-  user.password = formInfo.password
+  user.fullname = formInfo.fullname;
+  user.username = formInfo.username;
+  user.email = formInfo.email;
+  user.password = formInfo.password;
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   user.save();
@@ -25,7 +25,7 @@ const createUser = async (formInfo) => {
 };
 router.post("/user/create", async (req, res, next) => {
   var object = {};
-  const formInfo = req.body.formInfo;
+  let formInfo = req.body.formInfo;
 
   const user = await User.findOne({
     $or: [{ email: formInfo.email }, { username: formInfo.username }],
@@ -43,7 +43,7 @@ router.post("/user/create", async (req, res, next) => {
   }
 });
 router.post("/user/login", async (req, res, next) => {
-  const formInfo = req.body.formInfo;
+  let formInfo = req.body.formInfo;
   const user = await User.findOne({ username: formInfo.username });
 
   if (user != null) {
@@ -62,19 +62,21 @@ router.post("/user/login", async (req, res, next) => {
 });
 
 router.post("/metamodel-update", async (req, res, next) => {
-
-  const data = req.body
-  console.log(data)
-
-  MetaModel.findOneAndUpdate(
-    { _id: data.metaModel_id },
-    { $set: { description: data.descriptionModel, example: data.exampleModel} },
-    { new: true }
-  )
-    res.send({isUpdated:true})
-
-  
-  
+  const data = req.body;
+  const query = { _id: data.metaModel_id };
+  const addedWidgets = {
+    description: data.descriptionModel,
+    example: data.exampleModel,
+  };
+  const newValues = { $set: addedWidgets };
+  try {
+    const modelUpdated = await MetaModel.updateOne(query, [newValues]);
+    res.status(201).send(modelUpdated);
+    console.log("updated Page: ", modelUpdated);
+  } catch (e) {
+    console.log(e);
+    res.status(400).send(e);
+  }
 });
 router.post("/metamodel-create", async (req, res, next) => {
   const data = req.body.data;
@@ -104,7 +106,7 @@ router.post("/entity-create", async (req, res, next) => {
 router.post("/table-create", async (req, res, next) => {
   const data = req.body;
   console.log(data);
-  let table =new Table();
+  let table = new Table();
   table._id = new mongoose.Types.ObjectId();
   table.name = data.name;
   table.attribute = data.attributes;
@@ -112,6 +114,6 @@ router.post("/table-create", async (req, res, next) => {
   table.metamodel_id = data.metaModel_ID;
   table.multiplicity = data.cardinality;
   table.save();
-  res.send({ isCreate: true, tbale_id:  table._id });
+  res.send({ isCreate: true, tbale_id: table._id });
 });
 module.exports = router;
