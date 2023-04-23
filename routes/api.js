@@ -7,6 +7,9 @@ const mongoose = require("mongoose");
 const Entity = require("../models/Entity");
 const Table = require("../models/Table");
 
+
+
+//section of user 
 const createUser = async (formInfo) => {
   const user = new User();
   user._id = new mongoose.Types.ObjectId();
@@ -61,6 +64,10 @@ router.post("/user/login", async (req, res, next) => {
   }
 });
 
+
+
+
+//section of Meta-Model
 router.post("/metamodel-update", async (req, res, next) => {
   const data = req.body;
   const query = { _id: data.metaModel_id };
@@ -72,7 +79,6 @@ router.post("/metamodel-update", async (req, res, next) => {
   try {
     const modelUpdated = await MetaModel.updateOne(query, [newValues]);
     res.status(201).send(modelUpdated);
-    console.log("updated Page: ", modelUpdated);
   } catch (e) {
     console.log(e);
     res.status(400).send(e);
@@ -90,6 +96,30 @@ router.post("/metamodel-create", async (req, res, next) => {
   metaModel.save();
   res.send({ isCreate: true, MetaModel_ID: metaModel._id });
 });
+
+router.post("/get-table-data", async (req, res, next) => {
+  console.log(req.body)
+  Table.find({ metamodel_id: req.body.id}).then((Table) => {
+    res.send(Table);
+  });
+});
+
+router.post("/get-entity-data", async (req, res, next) => {
+  console.log(req.body)
+  Entity.find({ metamodel_id: req.body.id}).then((Entity) => {
+    res.send(Entity);
+  });
+})
+
+
+
+
+
+
+
+
+
+//section for table and entities 
 router.post("/entity-create", async (req, res, next) => {
   const data = req.body;
   console.log(data);
@@ -102,7 +132,6 @@ router.post("/entity-create", async (req, res, next) => {
   entity.save();
   res.send({ isCreate: true, entity_ID: entity._id });
 });
-
 router.post("/table-create", async (req, res, next) => {
   const data = req.body;
   console.log(data);
