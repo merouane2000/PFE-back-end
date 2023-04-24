@@ -6,6 +6,8 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Entity = require("../models/Entity");
 const Table = require("../models/Table");
+const Association = require("../models/Association");
+const RelationShip = require("../models/RelationShip");
 
 
 
@@ -96,14 +98,12 @@ router.post("/metamodel-create", async (req, res, next) => {
   metaModel.save();
   res.send({ isCreate: true, MetaModel_ID: metaModel._id });
 });
-
 router.post("/get-table-data", async (req, res, next) => {
   console.log(req.body)
   Table.find({ metamodel_id: req.body.id}).then((Table) => {
     res.send(Table);
   });
 });
-
 router.post("/get-entity-data", async (req, res, next) => {
   console.log(req.body)
   Entity.find({ metamodel_id: req.body.id}).then((Entity) => {
@@ -145,4 +145,42 @@ router.post("/table-create", async (req, res, next) => {
   table.save();
   res.send({ isCreate: true, tbale_id: table._id });
 });
+
+
+
+
+
+
+
+//section  for relation and association
+
+router.post("/association-create", async (req, res, next) => {
+  const data = req.body;
+  console.log(data);
+  let association = new Association()
+
+  association._id = new mongoose.Types.ObjectId();
+  association.name = data.values.AssociationName;
+  association.To = data.values.AssociationTo;
+  association.From = data.values.AssociationFrom;
+  association.metamodel_id = data.metaModel_ID;
+  association.save();
+  res.send({ isCreate: true});
+});
+
+router.post("/relationship-create", async (req, res, next) => {
+  const data = req.body;
+  console.log(data);
+  let relationship = new RelationShip()
+
+  relationship._id = new mongoose.Types.ObjectId();
+  relationship.name = data.values.RelationShipName;
+  relationship.To = data.values.RelationShipTo;
+  relationship.From = data.values.RelationShipFrom;
+  relationship.metamodel_id = data.metaModel_ID;
+  relationship.type = data.values.RelationShipType;
+  relationship.save();
+  res.send({ isCreate: true});
+});
+
 module.exports = router;
