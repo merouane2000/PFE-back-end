@@ -110,6 +110,31 @@ router.post("/get-entity-data", async (req, res, next) => {
     res.send(Entity);
   });
 })
+router.get("/get-all-models", async (req, res, next) => {
+  MetaModel.find().then((models) => {
+    res.send(models);
+  });
+})
+router.post("/get-selected-target-model", async (req, res, next) => {
+  console.log(req.body)
+ const entities = await Entity.find({ metamodel_id : req.body._id_target})
+ const association = await Association.find({ metamodel_id : req.body._id_target})
+res.send({
+  entitiesTarget : entities,
+  associationTarget : association,
+})
+
+})
+router.post("/get-selected-source-model", async (req, res, next) => {
+  console.log(req.body)
+ const tables = await Table.find({ metamodel_id : req.body._id_source})
+ const relationships = await RelationShip.find({ metamodel_id : req.body._id_source})
+res.send({
+  tablesSource : tables,
+  relationshipSource : relationships,
+})
+
+})
 
 
 
