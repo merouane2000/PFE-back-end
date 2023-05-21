@@ -7,7 +7,7 @@ const routes = require('./routes/api');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost/PFEDataBase', {
+mongoose.connect('mongodb+srv://merouanemeh:omba200012@cluster0.lofboep.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
