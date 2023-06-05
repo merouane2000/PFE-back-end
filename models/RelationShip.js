@@ -6,6 +6,7 @@ const RelationShipSchema = new Schema({
   name: { type: String },
   To: { type: String },
   From: { type: String },
+  cardinalty: { type: String },
   type: { type: String },
   metamodel_id:{type:String},
   createdAt: { type: Date, default: Date.now },

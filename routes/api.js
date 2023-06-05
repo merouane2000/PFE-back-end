@@ -202,6 +202,7 @@ router.post("/relationship-create", async (req, res, next) => {
   relationship.name = data.values.RelationShipName;
   relationship.To = data.values.RelationShipTo;
   relationship.From = data.values.RelationShipFrom;
+  relationship.cardinalty  = data.values.RelationShipCardinalty;
   relationship.metamodel_id = data.metaModel_ID;
   relationship.type = data.values.RelationShipType;
   relationship.save();
