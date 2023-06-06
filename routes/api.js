@@ -135,6 +135,16 @@ res.send({
 })
 
 })
+router.post("/get-edited-models", async (req, res, next) => {
+  console.log(req.body)
+ const editmodel = await MetaModel.find({ _id : req.body.notificationEdit})
+ const editUser = await User.find({_id : editmodel[0].user_id})
+res.send({
+  EditedModel : editmodel,
+  EditedUser : editUser
+})
+
+})
 
 
 
