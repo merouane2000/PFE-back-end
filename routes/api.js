@@ -218,5 +218,12 @@ router.post("/relationship-create", async (req, res, next) => {
   relationship.save();
   res.send({ isCreate: true});
 });
+router.post("/get-from-to-relations", async (req, res, next) => {
+  const data = req.body;
+  console.log(data);
+  const Coding = await RelationShip.find({  metamodel_id : data.codedsourceModel_id})
+  const CodingClasses = await Table.find({  metamodel_id : data.codedsourceModel_id})
+  res.send({ Coding ,CodingClasses});
+});
 
 module.exports = router;
